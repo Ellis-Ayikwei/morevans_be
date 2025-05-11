@@ -1,8 +1,8 @@
 from django.db import models
-
+from Basemodel.models import Basemodel
 from User.models import User
 
-class Notification(models.Model):
+class Notification(Basemodel):
     NOTIFICATION_TYPES = [
         ('request_update', 'Request Update'),
         ('payment', 'Payment Notification'),
@@ -16,7 +16,6 @@ class Notification(models.Model):
     title = models.CharField(max_length=200)
     message = models.TextField()
     data = models.JSONField(null=True)  # Additional data
-    created_at = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
     read_at = models.DateTimeField(null=True)
 
@@ -24,6 +23,8 @@ class Notification(models.Model):
         return self.title
 
     class Meta:
+        db_table = 'notification'
+        managed = True
         ordering = ['-created_at']
 
     def mark_as_read(self):

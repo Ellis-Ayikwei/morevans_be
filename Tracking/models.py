@@ -16,3 +16,7 @@ class TrackingUpdate(models.Model):
     status_message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     estimated_delay = models.DurationField(null=True)
+    
+    class Meta:
+        db_table = 'tracking_update'
+        managed = True

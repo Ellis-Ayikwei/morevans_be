@@ -14,3 +14,7 @@ class Message(Basemodel):
 
     def __str__(self):
         return f"Message from {self.sender.username} to {self.receiver.username}"
+        
+    class Meta:
+        db_table = 'message'
+        managed = True

@@ -1,30 +1,59 @@
 from django.db import models
+from Basemodel.models import Basemodel
+from django.utils.translation import gettext_lazy as _
 
-from Driver.models import Driver
-from Request.models import Request
 
-class Bid(models.Model):
+class Bid(Basemodel):
     STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('accepted', 'Accepted'),
-        ('rejected', 'Rejected'),
-        ('expired', 'Expired'),
-        ('withdrawn', 'Withdrawn'),
+        ("pending", "Pending"),
+        ("accepted", "Accepted"),
+        ("rejected", "Rejected"),
+        ("expired", "Expired"),
     ]
 
-    request = models.ForeignKey(Request, on_delete=models.CASCADE, related_name='bids')
-    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    job = models.ForeignKey(
+        "Job.Job", on_delete=models.CASCADE, related_name="bids", null=True, blank=True
+    )
+    provider = models.ForeignKey(
+        "Provider.ServiceProvider", on_delete=models.CASCADE, null=True, blank=True
+    )
     amount = models.DecimalField(max_digits=10, decimal_places=2)
-    proposed_pickup_time = models.DateTimeField()
-    estimated_completion_time = models.DateTimeField()
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='active')
-    created_at = models.DateTimeField(auto_now_add=True)
-    expires_at = models.DateTimeField()
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     notes = models.TextField(blank=True)
-    counter_offer = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"Bid by {self.driver.user.username} for {self.amount}" 
+    counter_offer = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True
+    )
+    estimated_completion_time = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ['-created_at']
+        verbose_name = _("Bid")
+        verbose_name_plural = _("Bids")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Bid of {self.amount} for {self.job}"
+
+    def accept(self):
+        """Accept this bid"""
+        if self.status == "pending":
+            self.status = "accepted"
+            self.save()
+            self.job.accept_bid(self)
+            return True
+        return False
+
+    def reject(self):
+        """Reject this bid"""
+        if self.status == "pending":
+            self.status = "rejected"
+            self.save()
+            return True
+        return False
+
+    def make_counter_offer(self, amount):
+        """Make a counter offer for this bid"""
+        if self.status == "pending":
+            self.counter_offer = amount
+            self.save()
+            return True
+        return False

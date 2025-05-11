@@ -30,4 +30,8 @@ class ServiceReview(models.Model):
     review_text = models.TextField(null=True, blank=True)
     
     # Timestamps
-    created_at = models.DateTimeField(auto_now_add=True) 
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        db_table = 'service_review'
+        managed = True

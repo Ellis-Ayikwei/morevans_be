@@ -48,6 +48,12 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractUser):
+    USER_TYPE_CHOICES = (
+        ('customer', 'Customer'),
+        ('provider', 'Service Provider'),
+        ('admin', 'Admin'),
+    )
+    
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
@@ -59,6 +65,8 @@ class User(AbstractUser):
     account_status = models.CharField(max_length=20, default='active')
     last_active = models.DateTimeField(null=True)
     device_tokens = models.JSONField(default=list)
+    user_type = models.CharField(max_length=20, choices=USER_TYPE_CHOICES, default='customer')
+
     username = None
     
     USERNAME_FIELD = 'email'
@@ -140,6 +148,8 @@ class Address(Basemodel):
     ]
     
     
+    
+    
     address_user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="addresses")
     address_line1 = models.CharField(max_length=255)
     address_line2 = models.CharField(max_length=255, blank=True, null=True)
@@ -157,7 +167,7 @@ class Address(Basemodel):
     def __str__(self):
         return self.address
 
-class UserActivity(models.Model):
+class UserActivity(Basemodel):
     """Track user activity history"""
     ACTIVITY_TYPES = [
         ('view_request', 'Viewed Request'),
@@ -173,13 +183,12 @@ class UserActivity(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='activities')
     activity_type = models.CharField(max_length=20, choices=ACTIVITY_TYPES)
     request = models.ForeignKey("Request.Request", on_delete=models.CASCADE, null=True)
-    timestamp = models.DateTimeField(auto_now_add=True)
     details = models.JSONField(null=True)  # Store additional activity details
 
     class Meta:
-        ordering = ['-timestamp']
+        ordering = ['-created_at']  # Updated to use created_at from Basemodel
         managed = True
         db_table = 'user_activity'
 
     def __str__(self):
-        return f"{self.user.username} - {self.activity_type}"
+        return f"{self.user.email} - {self.activity_type}"

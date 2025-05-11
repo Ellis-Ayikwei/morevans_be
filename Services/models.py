@@ -8,3 +8,9 @@ class ServiceCategory(models.Model):
 
     def __str__(self):
         return self.name
+        
+    class Meta:
+        db_table = 'service_category'
+        managed = True
+        verbose_name = "Service Category"
+        verbose_name_plural = "Service Categories"

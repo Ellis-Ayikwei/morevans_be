@@ -31,3 +31,7 @@ class ContractAgreement(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     agreement_start_date = models.DateTimeField(null=True)
     agreement_end_date = models.DateTimeField(null=True)
+    
+    class Meta:
+        db_table = 'contract_agreement'
+        managed = True

@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%u9eljyfg@m8zp&5)u6yv#_m6xbp0_m1!6+h#emx%bbmeo)1@='
+SECRET_KEY = "django-insecure-%u9eljyfg@m8zp&5)u6yv#_m6xbp0_m1!6+h#emx%bbmeo)1@="
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -31,102 +31,112 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
-    'viewflow',
-    'corsheaders',
-    'channels',
-    'Message',
-    'morevans_be',
-    'Notification',
-    'Payment',
-    'Provider',
-    'Request',
-    'User',
-    'Vehicle',
-    'Driver',
-    'Tracking',
-    'Location',
-    'Bidding',
-    'Review',
-    'Services',
-    'Contract',
-    'Basemodel',
-    
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",
+    "rest_framework.authtoken",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
+    "viewflow",
+    "corsheaders",
+    "channels",
+    "Message",
+    "morevans_be",
+    "Notification",
+    "Payment",
+    "Provider",
+    "Request",
+    "User",
+    "Vehicle",
+    "Driver",
+    "Tracking",
+    "Location",
+    "Bidding",
+    "Review",
+    "Services",
+    "Contract",
+    "Basemodel",
+    "utils",
+    "Job",
+    "pricing",
+    "CommonItems",
+    "RequestItems",
+    "JourneyStop",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'morevans_be.middle_ware.ConditionalSlashMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'morevans_be.urls'
+ROOT_URLCONF = "morevans_be.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'morevans_be.wsgi.application'
-ASGI_APPLICATION = 'morevans_be.asgi.application'
+WSGI_APPLICATION = "morevans_be.wsgi.application"
+ASGI_APPLICATION = "morevans_be.asgi.application"
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'morevans',  # database name
-        'USER': 'postgres',          # database user
-        'PASSWORD': '@Toshib123', # database password
-        'HOST': 'localhost',         # database host
-        'PORT': '5432',             # database port
+    "default": {
+        "ENGINE": "django.contrib.gis.db.backends.postgis",
+        "NAME": "morevans",  # database name
+        "USER": "postgres",  # database user
+        "PASSWORD": "@Toshib123",  # database password
+        "HOST": "localhost",  # database host
+        "PORT": "5432",  # database port
     }
 }
 
 import os
-os.environ['GDAL_DATA'] = r'C:\OSGeo4W\share\gdal'
-os.environ['PROJ_LIB'] = r'C:\OSGeo4W\share\proj'
-os.environ['PATH'] = r'C:\OSGeo4W\bin;' + os.environ['PATH']
 
-if os.name == 'nt':
+os.environ["GDAL_DATA"] = r"C:\OSGeo4W\share\gdal"
+os.environ["PROJ_LIB"] = r"C:\OSGeo4W\share\proj"
+os.environ["PATH"] = r"C:\OSGeo4W\bin;" + os.environ["PATH"]
+
+if os.name == "nt":
     import platform
+
     OSGEO4W = r"C:\OSGeo4W"
     # if '64' in platform.architecture()[0]:
     #     OSGEO4W += "64"
     assert os.path.isdir(OSGEO4W), "Directory does not exist: " + OSGEO4W
-    os.environ['OSGEO4W_ROOT'] = OSGEO4W
-    os.environ['GDAL_DATA'] = OSGEO4W + r"\share\gdal"
-    os.environ['PROJ_LIB'] = OSGEO4W + r"\share\proj"
-    os.environ['PATH'] = OSGEO4W + r"\bin;" + os.environ['PATH']
+    os.environ["OSGEO4W_ROOT"] = OSGEO4W
+    os.environ["GDAL_DATA"] = OSGEO4W + r"\share\gdal"
+    os.environ["PROJ_LIB"] = OSGEO4W + r"\share\proj"
+    os.environ["PATH"] = OSGEO4W + r"\bin;" + os.environ["PATH"]
 
 
 # GeoDjango Settings
 GDAL_LIBRARY_PATH = r"C:\OSGeo4W\bin\gdal310.dll"
-GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH', r'C:\OSGeo4W\bin\geos_c.dll')
+GEOS_LIBRARY_PATH = os.environ.get("GEOS_LIBRARY_PATH", r"C:\OSGeo4W\bin\geos_c.dll")
 
 from ctypes import CDLL
+
 lib_path = r"C:\OSGeo4W\bin\gdal310.dll"
 try:
     gdal_lib = CDLL(lib_path)
@@ -140,16 +150,16 @@ except OSError as e:
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -157,9 +167,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -169,55 +179,87 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = "static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-AUTH_USER_MODEL = 'User.User'
+AUTH_USER_MODEL = "User.User"
+
+# Add custom authentication backends
+AUTHENTICATION_BACKENDS = [
+    "Authentication.backends.EmailOrPhoneBackend",  # Custom backend for email/phone authentication
+    "django.contrib.auth.backends.ModelBackend",  # Default backend as fallback
+]
+
+# Table name settings to remove app name prefix
+TABLE_NAME_TEMPLATE = "{table_name}"
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
     ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
-    }
+    "DEFAULT_THROTTLE_RATES": {"anon": "100/day", "user": "1000/day"},
+    # Configure renderers so that responses are in camelCase.
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ),
+    # Configure parsers so that incoming camelCase keys are converted to snake_case.
+    "DEFAULT_PARSER_CLASSES": (
+        "rest_framework.parsers.JSONParser",
+        "rest_framework.parsers.FormParser",
+        "rest_framework.parsers.MultiPartParser",
+    ),
 }
 
 # JWT Settings
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': SECRET_KEY,
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=120),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "UPDATE_LAST_LOGIN": True,
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-# CORS Settings
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "https://your-production-domain.com",
-]
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
 
+# # CORS Settings
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+#     "https://your-production-domain.com",
+# ]
+
+
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+    "x-refresh-token",
+]
 
 # settings.py
 # CHANNEL_LAYERS = {
@@ -239,43 +281,44 @@ CHANNEL_LAYERS = {
 }
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
         },
     },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'propagate': True,
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "propagate": True,
         },
-        'airflow': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': False,
+        "airflow": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
         },
     },
 }
 
 # --- mailing system setting ----
-DEFAULT_FROM_EMAIL = 'ellisarmahayikwei@gmail.com'
-EMAIL_HOST = 'smtp.gmail.com'
+DEFAULT_FROM_EMAIL = "ellisarmahayikwei@gmail.com"
+EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'ellisarmahayikwei@gmail.com'
-EMAIL_HOST_PASSWORD = 'trxe mjsy kyhn yurw'
+EMAIL_HOST_USER = "ellisarmahayikwei@gmail.com"
+EMAIL_HOST_PASSWORD = "trxe mjsy kyhn yurw"
 EMAIL_USE_TLS = True
 
 
+APPEND_SLASH = False
