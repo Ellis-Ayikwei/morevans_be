@@ -512,31 +512,23 @@ class PricingService:
     ):
         """Calculate prices for different staff counts"""
         staff_prices = []
-        default_hourly = float(DEFAULT_STAFF_REQUIRED_PRICING["hourly_rate"])
+        default_rate = float(DEFAULT_STAFF_REQUIRED_PRICING["base_rate_per_staff"])
 
         for staff_count in range(1, 5):
             staff_cost = 0
-            hourly_rate = default_hourly  # fallback
-            base_staff_cost = 0
 
+            # Use the factor's base_rate_per_staff or fallback default_rate
             for factor in staff_factors:
                 if factor.min_staff <= staff_count <= factor.max_staff:
-                    # use factor.hourly_rate or fallback default
-                    hourly_rate = (
-                        float(factor.hourly_rate)
-                        if getattr(factor, "hourly_rate", None)
-                        else default_hourly
-                    )
-                    base_staff_cost = hourly_rate * (staff_count**1.5)
+                    rate = float(getattr(factor, "base_rate_per_staff", default_rate))
+                    staff_cost = rate * staff_count
 
+                    # Apply overtime multiplier on weekends/holidays
                     if is_weekend or is_holiday:
-                        overtime_multiplier = float(factor.overtime_rate_multiplier)
-                        base_staff_cost *= overtime_multiplier
+                        staff_cost *= float(factor.overtime_rate_multiplier)
 
-                    staff_cost = base_staff_cost
                     break
 
-            # Calculate total price with all components
             total_price = (
                 base_price
                 + distance_cost
@@ -546,14 +538,11 @@ class PricingService:
                 + insurance_cost
                 + staff_cost
             )
-
-            # Apply multipliers
             total_price *= service_multiplier
             total_price *= time_multiplier
             total_price *= weather_multiplier
             total_price *= vehicle_multiplier
 
-            # Apply surcharges
             fuel_surcharge = total_price * (
                 float(active_config.fuel_surcharge_percentage) / 100
             )
@@ -564,38 +553,15 @@ class PricingService:
             )
             total_price += carbon_offset
 
-            # Apply constraints
             total_price = max(total_price, float(active_config.min_price))
             max_price = base_price * float(active_config.max_price_multiplier)
             total_price = min(total_price, max_price)
-
-            # Round to 2 decimal places
             total_price = round(total_price, 2)
-
-            # Prepare price components
-            price_components = {
-                "base_price": round(base_price, 2),
-                "distance_cost": round(distance_cost, 2),
-                "weight_cost": round(weight_cost, 2),
-                "property_cost": round(property_cost, 2),
-                "vehicle_cost": round(vehicle_cost, 2),
-                "insurance_cost": round(insurance_cost, 2),
-                "staff_cost": round(staff_cost, 2),
-                "fuel_surcharge": round(fuel_surcharge, 2),
-                "carbon_offset": round(carbon_offset, 2),
-            }
 
             staff_prices.append(
                 {
                     "staff_count": staff_count,
                     "price": total_price,
-                    "components": price_components,
-                    "multipliers": {
-                        "service_multiplier": service_multiplier,
-                        "time_multiplier": time_multiplier,
-                        "weather_multiplier": weather_multiplier,
-                        "vehicle_multiplier": vehicle_multiplier,
-                    },
                 }
             )
 
