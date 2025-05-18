@@ -8,8 +8,6 @@ from django.contrib.postgres.indexes import GistIndex
 from django.contrib.gis.db import models as gis_models
 from django.utils import timezone
 
-from encrypted_fields import EncryptedCharField
-
 
 class ServiceProvider(Basemodel):
     # --- Core Identity ---
@@ -87,8 +85,8 @@ class ServiceProvider(Basemodel):
         blank=True,
         related_name="providers",
     )
-    stripe_connect_id = EncryptedCharField(max_length=100, blank=True)
-    tax_identification_number = EncryptedCharField(max_length=50, blank=True)
+    # stripe_connect_id = EncryptedCharField(max_length=100, blank=True)
+    # tax_identification_number = EncryptedCharField(max_length=50, blank=True)
 
     # --- Operational Preferences ---
     minimum_job_value = models.DecimalField(
