@@ -428,11 +428,11 @@ class RequestViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=True, methods=["post", "put"])
+    @action(detail=True, methods=["patch", "put"])
     def submit_step2(self, request, pk=None):
         """Handle step 2 submission (Locations)"""
         try:
-            if request.method == "POST":
+            if request.method == "patch":
                 data = request.data.copy()
                 data["status"] = "draft"
                 serializer = self.get_serializer(data=data)
@@ -532,7 +532,7 @@ class RequestViewSet(viewsets.ModelViewSet):
                 "dropoff_city": request.data.get("dropoff_city"),
                 "request_id": instance.id,
             }
-
+            print("forcat data", forecast_data)
             forecast_response = PricingService.calculate_price_forecast(forecast_data)
 
             return Response(
@@ -557,7 +557,7 @@ class RequestViewSet(viewsets.ModelViewSet):
 
         # Set initial status to draft
         data["status"] = "draft"
-
+        print("the initial data", data)
         # Set the user if authenticated
         if request.user and request.user.is_authenticated:
             data["user"] = request.user.id
